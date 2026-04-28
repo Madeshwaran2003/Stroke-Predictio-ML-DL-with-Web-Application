@@ -3,7 +3,7 @@ gunicorn==22.0.0
 
 # PyTorch CPU-only (much smaller than CUDA build — required for cloud deployment)
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.3.1+cpu
+torch==2.9.0+cpu
 
 # ML models
 xgboost==2.0.3
