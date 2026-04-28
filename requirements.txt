@@ -1,0 +1,20 @@
+flask==3.0.3
+gunicorn==22.0.0
+
+# PyTorch CPU-only (much smaller than CUDA build — required for cloud deployment)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.1+cpu
+
+# ML models
+xgboost==2.0.3
+scikit-learn==1.5.0
+imbalanced-learn==0.12.3
+joblib==1.4.2
+
+# Data
+pandas==2.2.2
+numpy==1.26.4
+
+# Explainability
+shap==0.45.1
+lime==0.2.0.1

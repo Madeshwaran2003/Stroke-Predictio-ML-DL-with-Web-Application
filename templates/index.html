@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroke Risk AI — 3D Neural Ensemble</title>
+    <meta name="description"
+        content="Advanced stroke risk prediction powered by ML+DL ensemble with SHAP and LIME explainability.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+
+<body>
+
+    <!-- ═══ HERO — 3D Brain Canvas ════════════════════════════════════ -->
+    <section class="hero-section" id="hero">
+        <canvas id="brain-canvas"></canvas>
+
+        <!-- Particle overlay -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Floating scanning lines -->
+        <div class="scan-line"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                ML + DL ENSEMBLE ACTIVE
+            </div>
+            <h1 class="hero-title">
+                <span class="title-glow">Stroke</span> Risk AI
+            </h1>
+            <p class="hero-subtitle">
+                DualPath · AHIN · AttentionFNN · ResGatedNet<br>
+                <span class="highlight-text">SHAP &amp; LIME Explainability</span>
+            </p>
+            <a href="#form-section" class="hero-cta" id="start-btn">
+                <span>Analyse My Risk</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12l7 7 7-7" />
+                </svg>
+            </a>
+        </div>
+
+        <!-- Brain info chips -->
+        <div class="brain-chips">
+            <div class="chip" id="chip-xgb">XGBoost</div>
+            <div class="chip" id="chip-rf">Random Forest</div>
+            <div class="chip" id="chip-ahin">AHIN</div>
+            <div class="chip" id="chip-shap">SHAP</div>
+            <div class="chip" id="chip-lime">LIME</div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-dot"></div>
+        </div>
+    </section>
+
+    <!-- ═══ MAIN CONTENT ══════════════════════════════════════════════ -->
+    <main class="main-content">
+
+        <!-- ── Form Section ──────────────────────────────────────────── -->
+        <section class="glass-card form-card" id="form-section">
+            <div class="card-header">
+                <div class="header-icon">🧬</div>
+                <div>
+                    <h2>Enter Your Details</h2>
+                    <p class="card-subtitle">Fill in all fields for the most accurate analysis</p>
+                </div>
+            </div>
+
+            <form id="prediction-form">
+                <div class="form-section-label">👤 Personal Information</div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="age">Age <span class="unit">(years)</span></label>
+                        <div class="input-wrapper">
+                            <input type="number" id="age" name="age" step="1" min="1" max="120" required
+                                placeholder="e.g. 55">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="gender">Gender</label>
+                        <div class="input-wrapper">
+                            <select id="gender" name="gender" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="ever_married">Ever Married</label>
+                        <div class="input-wrapper">
+                            <select id="ever_married" name="ever_married" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="Residence_type">Residence Area</label>
+                        <div class="input-wrapper">
+                            <select id="Residence_type" name="Residence_type" required>
+                                <option value="Urban">Urban</option>
+                                <option value="Rural">Rural</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section-label">🏥 Medical History</div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="avg_glucose_level">Blood Glucose <span class="unit">(mg/dL)</span></label>
+                        <div class="input-wrapper">
+                            <input type="number" id="avg_glucose_level" name="avg_glucose_level" step="0.1" min="50"
+                                max="400" required placeholder="e.g. 105">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="bmi">BMI <span class="unit">(kg/m²)</span></label>
+                        <div class="input-wrapper">
+                            <input type="number" id="bmi" name="bmi" step="0.1" min="10" max="70" required
+                                placeholder="e.g. 26.5">
+                        </div>
+                    </div>
+
+                    <div class="input-group toggle-group">
+                        <label>Hypertension</label>
+                        <div class="toggle-track">
+                            <input type="radio" id="hyp_no" name="hypertension" value="0" checked>
+                            <label for="hyp_no" class="toggle-btn">No</label>
+                            <input type="radio" id="hyp_yes" name="hypertension" value="1">
+                            <label for="hyp_yes" class="toggle-btn">Yes</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group toggle-group">
+                        <label>Heart Disease</label>
+                        <div class="toggle-track">
+                            <input type="radio" id="hd_no" name="heart_disease" value="0" checked>
+                            <label for="hd_no" class="toggle-btn">No</label>
+                            <input type="radio" id="hd_yes" name="heart_disease" value="1">
+                            <label for="hd_yes" class="toggle-btn">Yes</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section-label">💼 Lifestyle</div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="work_type">Work Type</label>
+                        <div class="input-wrapper">
+                            <select id="work_type" name="work_type" required>
+                                <option value="Private">Private</option>
+                                <option value="Self-employed">Self-Employed</option>
+                                <option value="Govt_job">Govt Job</option>
+                                <option value="children">Children</option>
+                                <option value="Never_worked">Never Worked</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="smoking_status">Smoking Status</label>
+                        <div class="input-wrapper">
+                            <select id="smoking_status" name="smoking_status" required>
+                                <option value="never smoked">Never Smoked</option>
+                                <option value="formerly smoked">Formerly Smoked</option>
+                                <option value="smokes">Smokes</option>
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-btn" id="submit-btn">
+                    <div class="btn-glow"></div>
+                    <span class="btn-text">🔍 Analyse My Risk</span>
+                    <div class="loader" id="btn-loader"></div>
+                </button>
+                <div id="error-msg" class="error-msg"></div>
+            </form>
+        </section>
+
+        <!-- ── Results Section ───────────────────────────────────────── -->
+        <section class="glass-card results-card" id="results-panel" style="display:none;">
+
+            <!-- Risk Badge + Gauge -->
+            <div class="result-header">
+                <div class="result-badge" id="result-badge">
+                    <span id="result-icon">⚡</span>
+                    <span id="result-label">Computing…</span>
+                </div>
+                <div class="gauge-ring-wrapper">
+                    <svg class="gauge-ring" viewBox="0 0 120 120">
+                        <circle class="gauge-track" cx="60" cy="60" r="50" />
+                        <circle class="gauge-fill" id="gauge-fill" cx="60" cy="60" r="50" stroke-dasharray="0 314"
+                            transform="rotate(-90 60 60)" />
+                        <text class="gauge-pct" id="gauge-pct" x="60" y="65" text-anchor="middle">0%</text>
+                        <text class="gauge-sub" x="60" y="80" text-anchor="middle">stroke risk</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-nav" id="tabs-nav">
+                <button class="tab-btn active" data-tab="why">🔍 Why?</button>
+                <button class="tab-btn" data-tab="recs">💊 Actions</button>
+                <button class="tab-btn" data-tab="models">🔬 Models</button>
+                <button class="tab-btn" data-tab="lime">📈 LIME</button>
+                <button class="tab-btn" data-tab="shap">🧩 SHAP</button>
+            </div>
+
+            <div class="tab-content active" id="tab-why">
+                <div class="explanation-box" id="why-text">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-recs">
+                <div class="explanation-box" id="recs-text"></div>
+            </div>
+
+            <div class="tab-content" id="tab-models">
+                <div class="models-grid" id="models-grid"></div>
+            </div>
+
+            <div class="tab-content" id="tab-lime">
+
+                <!-- ── GLOBAL importance (XGBoost + RF) ─────────────────── -->
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <h4>🌍 Global Feature Importance <span class="badge-tag">XGBoost + Random Forest</span></h4>
+                        <p class="chart-sub">Which features matter most for stroke prediction <strong>across all
+                                patients</strong></p>
+                    </div>
+                    <div class="chart-loading" id="global-imp-loading">
+                        <div class="spinner"></div>
+                        <span>Loading global importance…</span>
+                    </div>
+                    <div class="chart-container" id="global-imp-wrap" style="display:none;">
+                        <canvas id="global-imp-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-divider"></div>
+
+                <!-- ── PER-PREDICTION LIME ────────────────────────────────── -->
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <h4>🎯 LIME — This Prediction Only <span class="badge-tag">Per-Patient</span></h4>
+                        <p class="chart-sub">Features that influenced <em>your specific</em> result</p>
+                    </div>
+                    <div class="chart-loading" id="lime-loading">
+                        <div class="spinner"></div>
+                        <span>Running LIME explainer…</span>
+                    </div>
+                    <div class="chart-container" id="lime-chart-wrap" style="display:none;">
+                        <canvas id="lime-canvas"></canvas>
+                    </div>
+                    <p class="chart-legend">
+                        <span class="leg-dot danger"></span> Increases risk &nbsp;
+                        <span class="leg-dot safe"></span> Decreases risk
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="tab-content" id="tab-shap">
+                <div class="chart-header">
+                    <h4>SHAP — Waterfall (Game-Theory Attribution)</h4>
+                    <p class="chart-sub">How each factor moved the probability from the baseline</p>
+                </div>
+                <div class="chart-loading" id="shap-loading">
+                    <div class="spinner"></div>
+                    <span>Running SHAP explainer…</span>
+                </div>
+                <div class="chart-container" id="shap-chart-wrap" style="display:none;">
+                    <canvas id="shap-canvas"></canvas>
+                </div>
+                <p class="chart-legend">
+                    <span class="leg-dot danger"></span> Pushes risk up &nbsp;
+                    <span class="leg-dot safe"></span> Pushes risk down &nbsp;
+                    <span class="leg-dot neutral"></span> Baseline
+                </p>
+            </div>
+
+            <div class="results-footer">
+                <button class="reset-btn" id="reset-btn">↩ New Analysis</button>
+                <p class="disclaimer">⚠️ Research tool only — not a clinical diagnosis.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ═══ SCRIPTS ══════════════════════════════════════════════════ -->
+    <!-- Three.js CDN (r158) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+
+</html>
