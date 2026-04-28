@@ -1,4 +1,9 @@
 import os
+
+# Limit threads to reduce RAM usage on free-tier cloud hosting
+os.environ.setdefault('OMP_NUM_THREADS', '1')
+os.environ.setdefault('OPENBLAS_NUM_THREADS', '1')
+os.environ.setdefault('MKL_NUM_THREADS', '1')
 import json
 import joblib
 import numpy as np
@@ -591,5 +596,6 @@ def feature_importance():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
 
